@@ -6,6 +6,8 @@ from rest_framework.authentication import (SessionAuthentication,
                                            BasicAuthentication)
 from django.db.models import Q
 from rest_framework.decorators import api_view
+from django.shortcuts import redirect
+from django.core.urlresolvers import reverse
 # Create your views here.
 from user_data.forms import User, Bill, SearchField
 from user_data.models import Customer, Billing
@@ -17,25 +19,37 @@ def add_user(request):
         if form.is_valid():
             user_data = form.save(commit=True)
             user_data.save()
-            return HttpResponse('<script>alert("saved!");</script>')
+            return redirect(reverse('user-detail', kwargs={'cust_id': user_data.cust_id}))
         else:
             return HttpResponse(form.errors)
     else:
         new_form = User()
     return render(request, 'test.html', {'form': new_form})
 
-def add_service(request):
+
+
+def add_service(request, cust_id, id=None):
+    cust = list(Customer.objects.filter(cust_id=cust_id))
     if request.method == "POST":
-        form = Bill(request.POST)
+        if id != None:
+            bill = Billing.objects.get(id=id)
+            form = Bill(request.POST, instance=bill)
+        else:
+            form = Bill(request.POST)
         if form.is_valid():
-            service_data = form.save(commit=True)
+            service_data = form.save(commit=False)
+            service_data.cust_id = cust[0]
             service_data.save()
-            return HttpResponse('<script>alert("saved!");</script>')
+            return redirect(reverse('user-detail', kwargs={'cust_id': cust[0].cust_id}))
         else:
             return HttpResponse(form.errors)
     else:
-        new_form = Bill()
-    return render(request, 'test.html', {'form': new_form})
+        if id != None:
+            bill = Billing.objects.get(id=id)
+            new_form = Bill(instance=bill)
+        else:
+            new_form = Bill()
+    return render(request, 'test.html', {'form': new_form, 'name':cust[0].name})
 
 @api_view(['POST'])
 @authentication_classes((SessionAuthentication,
@@ -65,6 +79,7 @@ def get_bill_history(request, cust_id):
 def serach_user_v1(request):
     if request.method == "POST":
         new_form = SearchField(request.POST)
+        print(request.POST)
         qset = Q()
         if not len(request.POST['search']) == 0:
             for term in request.POST['search'].split():
@@ -87,9 +102,11 @@ def serach_user_v1(request):
 def get_bill_history_v1(request, cust_id):
     if request.method == 'GET':
         matching_results = list(Billing.objects.filter(cust_id__cust_id=cust_id))
+        user = Customer.objects.get(cust_id=cust_id)
         if matching_results == []:
             data = None
         else:
             serializer = BillList(matching_results, many=True)
             data = serializer.data
-        return render(request, 'bill_history.html', {'object': data})
+        url = reverse('adduser', kwargs={'cust_id': cust_id})
+        return render(request, 'bill_history.html', {'object': data, 'url': url, 'name':user.name})

@@ -13,16 +13,11 @@ class User(forms.ModelForm):
 
 class Bill(forms.ModelForm):
     service = forms.MultipleChoiceField(choices=SERVICE_TYPES, widget=forms.CheckboxSelectMultiple())
-    def clean_my_field(self):
-        if len(self.cleaned_data['my_field']) > 3:
-            raise forms.ValidationError('Select no more than 3.')
-        return self.cleaned_data['my_field']
-
     class Meta:
         model = Billing
-        fields = ['cust_id', 'service', 'amount', 'deleted', 'paid']
+        fields = ['service', 'amount', 'deleted', 'paid']
 
 
 
 class SearchField(forms.Form):
-    search = forms.CharField(label='search', max_length=100)
+    search = forms.CharField(label='Search', max_length=100)

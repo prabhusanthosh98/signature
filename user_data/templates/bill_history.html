@@ -1,12 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Bill History</title>
+
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
 </head>
+
+
+
 <body>
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Signature</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="/user/search">Home</a></li>
+      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Menu <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/adduser">Add Customer</a></li>
+          <li><a href="/user/search">Search User</a></li>
+          <li><a href="{{url}}">Add Bill</a></li>
+        </ul>
+      </li>
+      <li><a href="#">Page 2</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+      <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+    </ul>
+  </div>
+</nav>
+<center>
+<h1>Billing Details Of {{name}}</h1>
+
+
+
+
 {% if object != null %}
-<table border="1" style="width:100%">
+<table class="table table-striped table-hover table-condensed" width="647">
 <tr>
     <th>Customer ID</th>
     <th>Service</th>
@@ -30,17 +68,17 @@
 <td>{{i.datetime}}</td>
 <td>{{i.amount}}</td>
 <td>
-    {% if i.paid == true %}
+    {% if i.paid == True %}
     Paid
     {% else %}
-    Not Paid
+    Not Paid<a href= "/addservice/{{i.cust_id}}/{{i.id}}" >Modify</a>
 {% endif %}
 </td>
 </tr>
 
 
 {% endfor %}
-
+</center>
  </table>
 
                 {% endif %}

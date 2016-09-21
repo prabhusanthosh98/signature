@@ -32,7 +32,7 @@ class Customer(models.Model):
 class Billing(models.Model):
     cust_id = models.ForeignKey('Customer')
     service = models.CharField(max_length=64)
-    amount = models.IntegerField(null=True, blank=True, default=0)
+    amount = models.IntegerField()
     datetime = models.DateTimeField(auto_now_add=True, editable=False, blank=False)
     deleted = models.BooleanField(default=False)
     paid = models.BooleanField(default=False)
