@@ -21,7 +21,7 @@ def add_user(request):
             user_data.save()
             return redirect(reverse('user-detail', kwargs={'cust_id': user_data.cust_id}))
         else:
-            return HttpResponse(form.errors)
+            return render(request, 'test.html', {'form': form})
     else:
         new_form = User()
     return render(request, 'test.html', {'form': new_form})
@@ -42,7 +42,7 @@ def add_service(request, cust_id, id=None):
             service_data.save()
             return redirect(reverse('user-detail', kwargs={'cust_id': cust[0].cust_id}))
         else:
-            return HttpResponse(form.errors)
+            return render(request, 'test.html', {'form': form, 'name':cust[0].name})
     else:
         if id != None:
             bill = Billing.objects.get(id=id)
