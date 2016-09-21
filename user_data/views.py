@@ -19,8 +19,8 @@ def add_user(request):
         if form.is_valid():
             user_data = form.save(commit=True)
             user_data.save()
-            return redirect(reverse('addservice', kwargs={'cust_id': user_data.cust_id}))
-            # return redirect(reverse('user-detail', kwargs={'cust_id': user_data.cust_id}))
+            # return redirect(reverse('addservice', kwargs={'cust_id': user_data.cust_id}))
+            return redirect(reverse('user-detail', kwargs={'cust_id': user_data.cust_id}))
         else:
             return render(request, 'test.html', {'form': form})
     else:
