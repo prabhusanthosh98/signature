@@ -19,7 +19,8 @@ def add_user(request):
         if form.is_valid():
             user_data = form.save(commit=True)
             user_data.save()
-            return redirect(reverse('user-detail', kwargs={'cust_id': user_data.cust_id}))
+            return redirect(reverse('addservice', kwargs={'cust_id': user_data.cust_id}))
+            # return redirect(reverse('user-detail', kwargs={'cust_id': user_data.cust_id}))
         else:
             return render(request, 'test.html', {'form': form})
     else:
@@ -108,5 +109,5 @@ def get_bill_history_v1(request, cust_id):
         else:
             serializer = BillList(matching_results, many=True)
             data = serializer.data
-        url = reverse('adduser', kwargs={'cust_id': cust_id})
+        url = reverse('addservice', kwargs={'cust_id': cust_id})
         return render(request, 'bill_history.html', {'object': data, 'url': url, 'name':user.name})
