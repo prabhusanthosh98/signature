@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% if object != null %}
+<table border="1" style="width:100%">
+<tr>
+    <th>Customer ID</th>
+    <th>Service</th>
+    <th>Date</th>
+    <th>Amount</th>
+    <th>Payment Status</th>
+  </tr>
+                {% for i in object %}
+      <tr>
+          <td>{{i.cust_id}}</td>
+<td>
+{% for j in i.service %}
+    {% if j == ',' %}
+    <br>
+    {% endif %}
+    {% if j != '[' and j != ']' and j != ',' %}
+    {{j}}
+    {% endif %}
+{% endfor %}
+</td>
+<td>{{i.datetime}}</td>
+<td>{{i.amount}}</td>
+<td>
+    {% if i.paid == true %}
+    Paid
+    {% else %}
+    Not Paid
+{% endif %}
+</td>
+</tr>
+
+
+{% endfor %}
+
+ </table>
+
+                {% endif %}
+</body>
+</html>
