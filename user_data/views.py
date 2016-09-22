@@ -13,9 +13,13 @@ from user_data.forms import User, Bill, SearchField
 from user_data.models import Customer, Billing
 from user_data.serializers import UserList, BillList
 
-def add_user(request):
+def add_user(request,cust_id=None):
     if request.method == "POST":
-        form = User(request.POST)
+        if cust_id != None:
+            user = Customer.objects.get(cust_id=cust_id)
+            form = User(request.POST, instance=user)
+        else:
+            form = User(request.POST)
         if form.is_valid():
             user_data = form.save(commit=True)
             user_data.save()
@@ -24,7 +28,11 @@ def add_user(request):
         else:
             return render(request, 'test.html', {'form': form})
     else:
-        new_form = User()
+        if cust_id != None:
+            user = Customer.objects.get(cust_id=cust_id)
+            new_form = User(instance=user)
+        else:
+            new_form = User()
     return render(request, 'test.html', {'form': new_form})
 
 
@@ -80,13 +88,14 @@ def get_bill_history(request, cust_id):
 def serach_user_v1(request):
     if request.method == "POST":
         new_form = SearchField(request.POST)
-        print(request.POST)
         qset = Q()
+        add_data = None
         if not len(request.POST['search']) == 0:
-            for term in request.POST['search'].split():
-                qset |= Q(name__contains=term)
-                qset |= Q(phone__contains=term)
-                qset |= Q(emailid__contains=term)
+            term = request.POST['search']
+            # for term in request.POST['search'].split():
+            qset |= Q(name__contains=term)
+            qset |= Q(phone__contains=term)
+            # qset |= Q(emailid__contains=term)
             matching_results = list(Customer.objects.filter(qset))
             if matching_results == []:
                 matching_results = None
@@ -96,9 +105,14 @@ def serach_user_v1(request):
             return render(request, 'search.html', {'form': new_form,
                                                    'object': matching_results})
     else:
+        all_data = list(Customer.objects.all())
+        add_data = UserList(all_data, context={'request': request}, many=True)
+        add_data = add_data.data
+        if add_data == []:
+            add_data = None
         new_form = SearchField()
     return render(request, 'search.html', {'form': new_form,
-                                           'object': None})
+                                           'object': add_data})
 
 def get_bill_history_v1(request, cust_id):
     if request.method == 'GET':
@@ -110,4 +124,4 @@ def get_bill_history_v1(request, cust_id):
             serializer = BillList(matching_results, many=True)
             data = serializer.data
         url = reverse('addservice', kwargs={'cust_id': cust_id})
-        return render(request, 'bill_history.html', {'object': data, 'url': url, 'name':user.name})
+        return render(request, 'bill_history.html', {'object': data, 'url': url, 'user':user})

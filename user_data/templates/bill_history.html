@@ -15,7 +15,7 @@
 
 
 <body>
-<nav class="navbar navbar-inverse">
+<nav class="navbar navbar-inverse navbar-fixed-top">
   <div class="container-fluid">
     <div class="navbar-header">
       <a class="navbar-brand" href="#">Signature</a>
@@ -29,7 +29,7 @@
           <li><a href="{{url}}">Add Bill</a></li>
         </ul>
       </li>
-      <li><a href="#">Page 2</a></li>
+      <li><a href="/adduser/{{user.cust_id}}">Edit User</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
       <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
@@ -38,10 +38,30 @@
   </div>
 </nav>
 <center>
-<h1>Billing Details Of {{name}}</h1>
+
+    <br>
+    <br>
+    <br>
+<h3 style="color:red">Billing Details Of <label style="color:blue">{{user.name}}</label></h3>
+
+    <table>
+        <tr>
+            <td style="font-weight: bold;">Name:</td>
+            <td>{{user.name}}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">Mobile:</td>
+            <td>{{user.phone}}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">D.O.B:</td>
+            <td>{{user.DOB}}</td>
+        </tr>
+    </table>
 
 
-
+<br>
+    <br>
 
 {% if object != null %}
 <table class="table table-striped table-hover table-condensed" width="647">
@@ -81,6 +101,11 @@
 </center>
  </table>
 
-                {% endif %}
+                {% else %}
+
+    <h6 style="color:red">There is no bill added. if you want to add bill click <a href="{{url}}" style="color:blue">here</a></h6>
+
+
+{% endif %}
 </body>
 </html>

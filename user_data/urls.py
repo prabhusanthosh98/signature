@@ -5,6 +5,7 @@ from django.views.generic import RedirectView
 urlpatterns = [
 
     url(r'^adduser$', views.add_user, name = 'adduser'),
+    url(r'^adduser/(?P<cust_id>[0-9A-Z]{6})$$', views.add_user, name = 'adduser2'),
     url(r'^addservice/(?P<cust_id>[0-9A-Z]{6})$', views.add_service, name = 'addservice'),
     url(r'^addservice/(?P<cust_id>[0-9A-Z]{6})/(?P<id>[0-9]*)$', views.add_service, name = 'addservice2'),
     # url(r'^user/search$', views.serach_user, name = 'user'),
