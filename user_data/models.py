@@ -9,7 +9,6 @@ def stringkey(N):
 SERVICE_TYPES = (
     ('Head Massage', 'Head Massage'),
     ('Full Body Massage', 'Full Body Massage'),
-    ('Head Massage', 'Head Massage'),
     ('Hair Cut', 'Hair Cut'),
     ('Shave', 'Shave'),
     ('Facial', 'Facial'),
